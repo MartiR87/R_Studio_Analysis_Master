@@ -38,10 +38,13 @@ I dati utilizzati nello script includono:
 1. Clonare la repository sul proprio computer:
    ```bash
    git clone https://github.com/MartiR87/R_Studio_Analysis_Master.git
+   
 2. Aprire lo script in RStudio:
 Assicurarsi di avere installato i pacchetti R necessari: install.packages(c("dplyr", "ggplot2", "scales", "ggsignif", "dunn.test", "tidytext", "readr"))
-3. Eseguire i comandi passo passo per generare grafici, tabelle e analisi.
-4. Link
+
+4. Eseguire i comandi passo passo per generare grafici, tabelle e analisi.
+   
+6. Link
 Repository GitHub: https://github.com/MartiR87/R_Studio_Analysis_Master
 
 Licenza
