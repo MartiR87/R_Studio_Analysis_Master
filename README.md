@@ -30,8 +30,9 @@ I dati utilizzati nello script includono:
 
 - **data_clinical_sample**: informazioni cliniche dei pazienti
 - **data_mutations_extended**: dati mutazionali NGS filtrati
+- **data_clinical_patient**: informazioni generali dei pazienti
 
-> Nota: i dati reali non sono inclusi in questa repository per motivi di privacy.
+> Nota: i dataset non sono inclusi in questa repository per motivi di privacy e non sono pubblicamente distribuibili. L’accesso è stato fornito alla commissione tramite condivisione privata.
 
 ## Istruzioni per l’uso
 
