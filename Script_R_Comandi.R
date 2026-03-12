@@ -10,7 +10,7 @@
 library(dplyr)       # manipolazione dati
 library(ggplot2)     # grafici
 library(scales)      # formattazione percentuali
-library(ggsignif)    # barre di significativit�
+library(ggsignif)    # barre di significatività
 
 # ---------------------------- PARAMETRI ------------------------ 
 tumori_interesse <- c("Colorectum", "Ovary", "Endometrium")
@@ -95,7 +95,7 @@ comparisons <- list(
   c("Endometrium", "Ovary")
 )
 
-# Boxplot pulito con jitter e barre di significativit� Wilcoxon
+# Boxplot pulito con jitter e barre di significatività Wilcoxon
 ggplot(msi_alti, aes(x = Tumore, y = MSI, color = Tumore)) +
   geom_boxplot(outlier.shape = NA) +
   geom_jitter(width = 0.15, size = 2, alpha = 0.7) +
@@ -108,7 +108,7 @@ ggplot(msi_alti, aes(x = Tumore, y = MSI, color = Tumore)) +
     textsize = 4
   ) +
   labs(
-    title = "Distribuzione MSI per tipo di tumore (MSI > 20) con significatività",
+    title = "Distribuzione MSI per tipo di tumore (MSI > 20) con significativitÃ ",
     x = "Tipo di tumore",
     y = "MSI"
   ) +
@@ -131,7 +131,7 @@ ggplot(msi_alti, aes(x = Tumore, y = MSI, color = Tumore)) +
 # ============================================================
 
 # ---------------------------- LIBRERIE AGGIUNTIVE ------------------------ 
-# Assicurati di aver gi� caricato:
+# Assicurati di aver già caricato:
 library(dplyr)
 library(ggplot2)
 library(ggsignif)
@@ -146,15 +146,15 @@ ggplot(msi_alti, aes(x = MSI, fill = Tumore)) +
   labs(
     title = "Distribuzione MSI-H per tipo di tumore",
     x = "MSI",
-    y = "Densità"
+    y = "DensitÃ "
   ) +
   theme_minimal()
 
 # ---------------------------- 2. TEST SHAPIRO-WILK ------------------------ 
-# Verifica formalmente la normalit� per ciascun tumore
+# Verifica formalmente la normalità per ciascun tumore
 shapiro_results <- by(msi_alti$MSI, msi_alti$Tumore, shapiro.test)
 shapiro_results
-# Nota: p-value < 0.05 indica deviazione dalla normalit�
+# Nota: p-value < 0.05 indica deviazione dalla normalità
 
 # ---------------------------- 3. Q-Q PLOT ------------------------ 
 # Q-Q plot dei valori MSI-H per ciascun tumore
@@ -476,17 +476,17 @@ filtered_final <- merged_data %>%
     Hugo_Symbol %in% c("BRCA1", "BRCA2"),
     Variant_Type %in% c("INS", "DEL")
   )
-cat("✅ Varianti filtrate:", nrow(filtered_final), "\n")
+cat("â Varianti filtrate:", nrow(filtered_final), "\n")
 
 # ---------------------------
-# 4. Rimozione varianti note gi� analizzate
+# 4. Rimozione varianti note già analizzate
 # ---------------------------
 varianti_da_escludere <- c("rs80357569", "rs80357522", "rs80359306",
                            "rs80359479", "rs80359507", "rs397507419")
 
 dataset_filtrato <- filtered_final %>%
   filter(!(trimws(dbSNP_RS) %in% varianti_da_escludere))
-cat("✅ Righe totali nel dataset filtrato (senza varianti note):", nrow(dataset_filtrato), "\n")
+cat("â Righe totali nel dataset filtrato (senza varianti note):", nrow(dataset_filtrato), "\n")
 
 # ---------------------------
 # 5. Separazione varianti novel e con rsID valido
@@ -532,3 +532,79 @@ pazienti_varianti_novel <- varianti_novel %>%
   arrange(SAMPLE_ID)
 
 print(pazienti_varianti_novel)
+
+# ============================================================
+# SESTA PARTE: GENERAZIONE TABELLE: Figure 11a, 11b, 13, 14a, 14b
+# ============================================================
+
+library(dplyr)
+
+# ----------------------------
+# 1. FIGURA 11a - MSI > 20
+# ----------------------------
+tabella_msi_alti <- msi_alti_varianti %>%
+  group_by(Tumore, Gene, Variante) %>%
+  summarise(
+    N_pazienti = n_distinct(Paziente_ID),
+    .groups = "drop"
+  ) %>%
+  group_by(Tumore) %>%
+  mutate(
+    Percentuale = round(100 * N_pazienti / sum(N_pazienti), 1)
+  ) %>%
+  ungroup()
+
+print(tabella_msi_alti)
+
+
+# ----------------------------
+# 2. FIGURA 11b - MSI < 20
+# ----------------------------
+tabella_msi_bassi <- msi_bassi_varianti %>%
+  group_by(Tumore, Gene, Variante) %>%
+  summarise(
+    N_pazienti = n_distinct(Paziente_ID),
+    .groups = "drop"
+  ) %>%
+  group_by(Tumore) %>%
+  mutate(
+    Percentuale = round(100 * N_pazienti / sum(N_pazienti), 1)
+  ) %>%
+  ungroup()
+
+print(tabella_msi_bassi)
+
+
+# ----------------------------
+# 3. FIGURA 13 - percentuali MSI-H / MSS
+# ----------------------------
+print(tabella_combinata)
+
+
+# ----------------------------
+# 4. FIGURA 14a - lista pazienti MSI > 20
+# ----------------------------
+tabella_pazienti_alti <- msi_alti_varianti %>%
+  arrange(Tumore, MSI)
+
+print(tabella_pazienti_alti)
+
+
+# ----------------------------
+# 5. FIGURA 14b - lista pazienti MSI < 20
+# ----------------------------
+tabella_pazienti_bassi <- msi_bassi_varianti %>%
+  arrange(Tumore, MSI)
+
+print(tabella_pazienti_bassi)
+
+
+# ----------------------------
+# 6. Esportazione CSV per Word
+# ----------------------------
+
+write.csv(tabella_msi_alti, "tabella11a.csv", row.names = FALSE)
+write.csv(tabella_msi_bassi, "tabella11b.csv", row.names = FALSE)
+write.csv(tabella_combinata, "tabella13.csv", row.names = FALSE)
+write.csv(tabella_pazienti_alti, "tabella14a.csv", row.names = FALSE)
+write.csv(tabella_pazienti_bassi, "tabella14b.csv", row.names = FALSE)
