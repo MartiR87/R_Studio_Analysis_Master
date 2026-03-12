@@ -1,6 +1,6 @@
 # Analisi dati clinici e molecolari in R
 
-Questa repository contiene lo script R utilizzato per la tesina di Master di II livello in Bioinformatica e Data Science, dal titolo:
+Questa repository contiene lo script R utilizzato per la tesina Master di II livello in Bioinformatica e Data Science, dal titolo:
 
 “MSI-H e varianti passenger nei tumori del colon-retto, dell’endometrio e dell’ovaio: analisi di una coorte di pazienti oncologici per una possibile stratificazione terapeutica”.
 
