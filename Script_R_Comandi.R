@@ -10,7 +10,7 @@
 library(dplyr)       # manipolazione dati
 library(ggplot2)     # grafici
 library(scales)      # formattazione percentuali
-library(ggsignif)    # barre di significatività
+library(ggsignif)    # barre di significativitÃ 
 
 # ---------------------------- PARAMETRI ------------------------ 
 tumori_interesse <- c("Colorectum", "Ovary", "Endometrium")
@@ -95,7 +95,7 @@ comparisons <- list(
   c("Endometrium", "Ovary")
 )
 
-# Boxplot pulito con jitter e barre di significatività Wilcoxon
+# Boxplot pulito con jitter e barre di significativitÃ  Wilcoxon
 ggplot(msi_alti, aes(x = Tumore, y = MSI, color = Tumore)) +
   geom_boxplot(outlier.shape = NA) +
   geom_jitter(width = 0.15, size = 2, alpha = 0.7) +
@@ -108,7 +108,7 @@ ggplot(msi_alti, aes(x = Tumore, y = MSI, color = Tumore)) +
     textsize = 4
   ) +
   labs(
-    title = "Distribuzione MSI per tipo di tumore (MSI > 20) con significativitÃ ",
+    title = "Distribuzione MSI per tipo di tumore (MSI > 20) con significativitÃÂ ",
     x = "Tipo di tumore",
     y = "MSI"
   ) +
@@ -131,7 +131,7 @@ ggplot(msi_alti, aes(x = Tumore, y = MSI, color = Tumore)) +
 # ============================================================
 
 # ---------------------------- LIBRERIE AGGIUNTIVE ------------------------ 
-# Assicurati di aver già caricato:
+# Assicurati di aver giÃ  caricato:
 library(dplyr)
 library(ggplot2)
 library(ggsignif)
@@ -146,15 +146,15 @@ ggplot(msi_alti, aes(x = MSI, fill = Tumore)) +
   labs(
     title = "Distribuzione MSI-H per tipo di tumore",
     x = "MSI",
-    y = "DensitÃ "
+    y = "DensitÃÂ "
   ) +
   theme_minimal()
 
 # ---------------------------- 2. TEST SHAPIRO-WILK ------------------------ 
-# Verifica formalmente la normalità per ciascun tumore
+# Verifica formalmente la normalitÃ  per ciascun tumore
 shapiro_results <- by(msi_alti$MSI, msi_alti$Tumore, shapiro.test)
 shapiro_results
-# Nota: p-value < 0.05 indica deviazione dalla normalità
+# Nota: p-value < 0.05 indica deviazione dalla normalitÃ 
 
 # ---------------------------- 3. Q-Q PLOT ------------------------ 
 # Q-Q plot dei valori MSI-H per ciascun tumore
@@ -476,17 +476,17 @@ filtered_final <- merged_data %>%
     Hugo_Symbol %in% c("BRCA1", "BRCA2"),
     Variant_Type %in% c("INS", "DEL")
   )
-cat("â Varianti filtrate:", nrow(filtered_final), "\n")
+cat("Ã¢ÂÂ Varianti filtrate:", nrow(filtered_final), "\n")
 
 # ---------------------------
-# 4. Rimozione varianti note già analizzate
+# 4. Rimozione varianti note giÃ  analizzate
 # ---------------------------
 varianti_da_escludere <- c("rs80357569", "rs80357522", "rs80359306",
                            "rs80359479", "rs80359507", "rs397507419")
 
 dataset_filtrato <- filtered_final %>%
   filter(!(trimws(dbSNP_RS) %in% varianti_da_escludere))
-cat("â Righe totali nel dataset filtrato (senza varianti note):", nrow(dataset_filtrato), "\n")
+cat("Ã¢ÂÂ Righe totali nel dataset filtrato (senza varianti note):", nrow(dataset_filtrato), "\n")
 
 # ---------------------------
 # 5. Separazione varianti novel e con rsID valido
@@ -608,3 +608,78 @@ write.csv(tabella_msi_bassi, "tabella11b.csv", row.names = FALSE)
 write.csv(tabella_combinata, "tabella13.csv", row.names = FALSE)
 write.csv(tabella_pazienti_alti, "tabella14a.csv", row.names = FALSE)
 write.csv(tabella_pazienti_bassi, "tabella14b.csv", row.names = FALSE)
+
+
+
+# ============================================================
+# SETTIMA PARTE: APPROFONDIMENTO PER ENDOMETRIO
+# ============================================================
+
+# ----------------------------
+# 1. confronto MSI vs mutazioni MMR (ENDOMETRIO)
+# ----------------------------
+
+# Mutazioni MMR per paziente
+mutazioni_MMR <- data_mutations_extended %>%
+  filter(V2 %in% geni_MMR) %>%
+  select(Paziente_ID = V1, Gene = V2)
+
+# Unione con dataset clinico MSI
+msi_mmr <- data_clean %>%
+  filter(Stato_MSI == "MSI-H") %>%
+  left_join(mutazioni_MMR, by = "Paziente_ID")
+
+# Variabile: mutato vs non mutato
+msi_mmr <- msi_mmr %>%
+  mutate(
+    MMR_status = ifelse(is.na(Gene), "MMR_wt", "MMR_mut")
+  )
+
+# Consideriamo solo ENDOMETRIO
+endo_mmr <- msi_mmr %>%
+  filter(Tumore == "Endometrium")
+
+
+# Istogramma separato per MMR mutato vs WT
+ggplot(endo_mmr, aes(x = MSI, fill = MMR_status)) +
+  geom_histogram(aes(y = ..density..),
+                 bins = 20,
+                 alpha = 0.5,
+                 position = "identity") +
+  geom_density(alpha = 0.7) +
+  labs(
+    title = "Distribuzione MSI in Endometrium: MMR mut vs WT",
+    x = "MSI",
+    y = "Densità",
+    fill = "MMR status"
+  ) +
+  theme_minimal()
+
+# ----------------------------
+# 2. Boxplot MSI vs MMR
+# ----------------------------
+ggplot(endo_mmr, aes(x = MMR_status, y = MSI, color = MMR_status)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.1, alpha = 0.7) +
+  labs(
+    title = "Confronto MSI tra MMR mutati e WT (Endometrium)",
+    x = "MMR status",
+    y = "MSI"
+  ) +
+  theme_minimal()
+
+# ----------------------------
+# 3. Test statistico non parametrico → Wilcoxon
+# ----------------------------
+wilcox.test(MSI ~ MMR_status, data = endo_mmr)
+
+# Media MSI per gruppo
+endo_mmr %>%
+  group_by(MMR_status) %>%
+  summarise(
+    n = n(),
+    media = mean(MSI),
+    mediana = median(MSI),
+    sd = sd(MSI)
+  )
+
