@@ -13,6 +13,7 @@ Lo script riguarda l’analisi di dati clinici e molecolari di pazienti con tumo
 - l’analisi delle varianti nei geni MMR;
 - la generazione di grafici e tabelle riassuntive per pazienti MSI-H (MSI>20) e MSI-L (MSI<20);
 - l’identificazione di varianti novel in regioni omopolimeriche nei geni BRCA1/2
+- Approfondimento per Endometrio e confronto tra MMR-mutati Vs WT
 
 
 ## Contenuto
