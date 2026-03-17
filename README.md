@@ -7,22 +7,26 @@ Questa repository contiene lo script R utilizzato per la tesina Master di II liv
 Lo script riguarda l’analisi di dati clinici e molecolari di pazienti con tumore del colon-retto, ovaio ed endometrio, e include tutti i passaggi necessari per:
 
 - la pulizia e normalizzazione dei dati clinici;
-- l’analisi della distribuzione di MSI (Microsatellite Instability);
-- il filtraggio dei pazienti con varianti BRCA1/2;
-- l’analisi delle mutazioni nei geni MMR;
-- la generazione di grafici e tabelle riassuntive per pazienti MSI-H e MSI-L;
-- l’identificazione di varianti novel e note nei geni BRCA1/2.
+- selezione dei pazienti con tumori di interesse (ovaio, colon-retto ed endometrio)
+- l’analisi della distribuzione dei pazienti in base al valore di MSI (Microsatellite Instability);
+- il filtraggio dei pazienti con varianti hotspot BRCA1/2;
+- l’analisi delle varianti nei geni MMR;
+- la generazione di grafici e tabelle riassuntive per pazienti MSI-H (MSI>20) e MSI-L (MSI<20);
+- l’identificazione di varianti novel in regioni omopolimeriche nei geni BRCA1/2
 
 
 ## Contenuto
 
 - **Script_R_Comandi.R**: script completo in R che esegue:
+  
   - Pulizia e normalizzazione dei dati clinici
-  - Analisi della distribuzione MSI (Microsatellite Instability)
-  - Filtraggio pazienti con varianti BRCA1/2
-  - Analisi delle mutazioni nei geni MMR
+  - Selezione dei pazienti con i tre tumori studiati (ovaio, colon-retto, endometrio)
+  - Analisi della distribuzione dei pazienti in base all'MSI (Microsatellite Instability)
+  - Filtraggio pazienti con varianti hotspot in BRCA1/2 già note in letteratura scientifica
+  - Analisi delle varianti nei geni MMR nei pazienti con MSI-H (MSI>20)
   - Grafici e tabelle riassuntive per pazienti MSI-H e MSI-L
-  - Analisi delle varianti novel e note nei geni BRCA1/2
+  - Analisi delle varianti novel in regioni omopolimeriche nei geni BRCA1/2
+
 
 ## Dati
 
