@@ -30,7 +30,7 @@ totali_per_tumore <- data_clean %>%
     label = paste0(round(perc * 100, 1), "%")
   )
 
-# Grafico a barre della distribuzione dei tumori
+# Grafico a barre della distribuzione dei tumori - Figura 1
 ggplot(totali_per_tumore, aes(x = Tumore, y = perc, fill = Tumore)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = label), vjust = -0.5, size = 3) +
@@ -69,7 +69,7 @@ msi_normalizzato <- msi_per_tumore %>%
     label = paste0(round(perc_MSI_H * 100, 1), "%")
   )
 
-# Grafico percentuale MSI-H normalizzata
+# Grafico percentuale MSI-H normalizzata - Figura 2
 ggplot(msi_normalizzato, aes(x = Tumore, y = perc_MSI_H, fill = Tumore)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = label), vjust = -0.7, size = 3) +
@@ -95,7 +95,7 @@ comparisons <- list(
   c("Endometrium", "Ovary")
 )
 
-# Boxplot pulito con jitter e barre di significativitÃ  Wilcoxon
+# Boxplot pulito con jitter e barre di significativitÃ  Wilcoxon - Figura 4
 ggplot(msi_alti, aes(x = Tumore, y = MSI, color = Tumore)) +
   geom_boxplot(outlier.shape = NA) +
   geom_jitter(width = 0.15, size = 2, alpha = 0.7) +
@@ -138,7 +138,7 @@ library(ggsignif)
 library(dunn.test)   # per test post-hoc di Dunn
 
 # ---------------------------- 1. ISTOGRAMMI E DENSITA' ------------------------ 
-# Visualizzazione della distribuzione MSI-H per tumore
+# Visualizzazione della distribuzione MSI-H per tumore - Figura 6
 ggplot(msi_alti, aes(x = MSI, fill = Tumore)) +
   geom_histogram(aes(y = ..density..), bins = 30, color = "black", alpha = 0.5) +
   geom_density(alpha = 0.7) +
@@ -151,13 +151,13 @@ ggplot(msi_alti, aes(x = MSI, fill = Tumore)) +
   theme_minimal()
 
 # ---------------------------- 2. TEST SHAPIRO-WILK ------------------------ 
-# Verifica formalmente la normalitÃ  per ciascun tumore
+# Verifica formalmente la normalitÃ  per ciascun tumore - Figura 5
 shapiro_results <- by(msi_alti$MSI, msi_alti$Tumore, shapiro.test)
 shapiro_results
 # Nota: p-value < 0.05 indica deviazione dalla normalitÃ 
 
 # ---------------------------- 3. Q-Q PLOT ------------------------ 
-# Q-Q plot dei valori MSI-H per ciascun tumore
+# Q-Q plot dei valori MSI-H per ciascun tumore - Figura 11
 ggplot(msi_alti, aes(sample = MSI)) +
   stat_qq() +
   stat_qq_line(color = "red") +
@@ -170,13 +170,13 @@ ggplot(msi_alti, aes(sample = MSI)) +
   theme_minimal()
 
 # ---------------------------- 4. TEST KRUSKAL-WALLIS ------------------------ 
-# Test non parametrico tra gruppi tumorali (MSI-H)
+# Test non parametrico tra gruppi tumorali (MSI-H) - Figura 12
 kruskal_results <- kruskal.test(MSI ~ Tumore, data = msi_alti)
 kruskal_results
 # Nota: p-value < 0.05 indica differenze significative tra almeno due gruppi
 
 # ---------------------------- 5. TEST POST-HOC DI DUNN ------------------------ 
-# Con correzione Bonferroni per confronti multipli
+# Con correzione Bonferroni per confronti multipli - Figura 12
 dunn_results <- dunn.test(msi_alti$MSI, msi_alti$Tumore, method = "bonferroni")
 dunn_results
 # I risultati mostrano quali coppie di tumori differiscono significativamente
@@ -223,7 +223,7 @@ brca_normalizzato <- brca_count %>%
   ungroup()
 
 # ---------------------------- 6. GRAFICO A BARRE ------------------------ 
-# Visualizza numero e percentuale di pazienti BRCA1/2 per tumore e MSI
+# Visualizza numero e percentuale di pazienti BRCA1/2 per tumore e MSI - Figura 3
 ggplot(brca_normalizzato, aes(x = Tumore, y = Pazienti, fill = MSI_status)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +
   geom_text(aes(label = paste0(Percentuale, "%")),
@@ -313,7 +313,7 @@ msi_brca_normalizzato <- msi_alti_varianti %>%
   ungroup()
 
 # ----------------------------
-# 6. Grafico MSI-H
+# 6. Grafico MSI-H - Figura 15
 # ----------------------------
 ggplot(msi_brca_normalizzato, aes(x = Variante, y = N_pazienti, fill = Gene)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
@@ -348,7 +348,7 @@ msi_basso_normalizzato <- msi_bassi_varianti %>%
   ungroup()
 
 # ----------------------------
-# 8. Grafico MSI-L
+# 8. Grafico MSI-L - Figura 17
 # ----------------------------
 ggplot(msi_basso_normalizzato, aes(x = Variante, y = N_pazienti, fill = Gene)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
@@ -397,7 +397,7 @@ conteggio_MMR <- mutazioni_MMR_con_tumore %>%
   arrange(Tumore, Stato_MSI, desc(Pazienti_con_mutazione))
 
 # ----------------------------
-# 10. Visualizzazione grafica mutazioni MMR
+# 10. Visualizzazione grafica mutazioni MMR - Figura 21
 # ----------------------------
 library(tidytext)  # per reorder_within
 
@@ -479,7 +479,7 @@ filtered_final <- merged_data %>%
 cat("Ã¢ÂÂ Varianti filtrate:", nrow(filtered_final), "\n")
 
 # ---------------------------
-# 4. Rimozione varianti note giÃ  analizzate
+# 4. Rimozione varianti note giÃ  analizzate - Figura 22
 # ---------------------------
 varianti_da_escludere <- c("rs80357569", "rs80357522", "rs80359306",
                            "rs80359479", "rs80359507", "rs397507419")
@@ -512,7 +512,7 @@ grafico_data <- varianti_uniche_finali %>%
   mutate(Percentuale = round(100 * Conteggio_varianti / Totale_pazienti, 1))
 
 # ---------------------------
-# 8. Grafico barre normalizzato con percentuali
+# 8. Grafico barre normalizzato con percentuali - Figura 23
 # ---------------------------
 ggplot(grafico_data, aes(x = reorder(NEOPLASM, -Percentuale), y = Percentuale)) +
   geom_bar(stat = "identity", fill = "steelblue") +
@@ -525,7 +525,7 @@ ggplot(grafico_data, aes(x = reorder(NEOPLASM, -Percentuale), y = Percentuale)) 
   theme_minimal(base_size = 14)
 
 # ---------------------------
-# 9. Elenco pazienti con varianti novel
+# 9. Elenco pazienti con varianti novel - Figura 24
 # ---------------------------
 pazienti_varianti_novel <- varianti_novel %>%
   select(SAMPLE_ID, NEOPLASM, Hugo_Symbol, Chromosome, Start_Position, HGVSc, HGVSp) %>%
@@ -534,13 +534,13 @@ pazienti_varianti_novel <- varianti_novel %>%
 print(pazienti_varianti_novel)
 
 # ============================================================
-# SESTA PARTE: GENERAZIONE TABELLE: Figure 11a, 11b, 13, 14a, 14b
+# SESTA PARTE: GENERAZIONE TABELLE: Figure 14, 16, 18, 19, 20
 # ============================================================
 
 library(dplyr)
 
 # ----------------------------
-# 1. FIGURA 11a - MSI > 20
+# 1. FIGURA 14 - MSI > 20
 # ----------------------------
 tabella_msi_alti <- msi_alti_varianti %>%
   group_by(Tumore, Gene, Variante) %>%
@@ -558,7 +558,7 @@ print(tabella_msi_alti)
 
 
 # ----------------------------
-# 2. FIGURA 11b - MSI < 20
+# 2. FIGURA 16 - MSI < 20
 # ----------------------------
 tabella_msi_bassi <- msi_bassi_varianti %>%
   group_by(Tumore, Gene, Variante) %>%
@@ -576,13 +576,13 @@ print(tabella_msi_bassi)
 
 
 # ----------------------------
-# 3. FIGURA 13 - percentuali MSI-H / MSS
+# 3. FIGURA 18 - percentuali MSI-H / MSS
 # ----------------------------
 print(tabella_combinata)
 
 
 # ----------------------------
-# 4. FIGURA 14a - lista pazienti MSI > 20
+# 4. FIGURA 19 - lista pazienti MSI > 20
 # ----------------------------
 tabella_pazienti_alti <- msi_alti_varianti %>%
   arrange(Tumore, MSI)
@@ -591,7 +591,7 @@ print(tabella_pazienti_alti)
 
 
 # ----------------------------
-# 5. FIGURA 14b - lista pazienti MSI < 20
+# 5. FIGURA 20 - lista pazienti MSI < 20
 # ----------------------------
 tabella_pazienti_bassi <- msi_bassi_varianti %>%
   arrange(Tumore, MSI)
@@ -635,12 +635,12 @@ msi_mmr <- msi_mmr %>%
     MMR_status = ifelse(is.na(Gene), "MMR_wt", "MMR_mut")
   )
 
-# Consideriamo solo ENDOMETRIO
+# Considero solo ENDOMETRIO
 endo_mmr <- msi_mmr %>%
   filter(Tumore == "Endometrium")
 
 
-# Istogramma separato per MMR mutato vs WT
+# Istogramma separato per MMR mutato vs WT - Figura 7
 ggplot(endo_mmr, aes(x = MSI, fill = MMR_status)) +
   geom_histogram(aes(y = ..density..),
                  bins = 20,
@@ -656,7 +656,7 @@ ggplot(endo_mmr, aes(x = MSI, fill = MMR_status)) +
   theme_minimal()
 
 # ----------------------------
-# 2. Boxplot MSI vs MMR
+# 2. Boxplot MSI vs MMR - Figura 10
 # ----------------------------
 ggplot(endo_mmr, aes(x = MMR_status, y = MSI, color = MMR_status)) +
   geom_boxplot(outlier.shape = NA) +
@@ -669,11 +669,11 @@ ggplot(endo_mmr, aes(x = MMR_status, y = MSI, color = MMR_status)) +
   theme_minimal()
 
 # ----------------------------
-# 3. Test statistico non parametrico → Wilcoxon
+# 3. Test statistico non parametrico → Wilcoxon - Figura 8
 # ----------------------------
 wilcox.test(MSI ~ MMR_status, data = endo_mmr)
 
-# Media MSI per gruppo
+# Media MSI per gruppo - Figura 9
 endo_mmr %>%
   group_by(MMR_status) %>%
   summarise(
